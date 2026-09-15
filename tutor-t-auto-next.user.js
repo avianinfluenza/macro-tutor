@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tutor-T 자동 다음 영상 재생
 // @namespace    local.tutor-t
-// @version      1.3.0
+// @version      1.3.1
 // @description  Tutor-T의 AI 질문과 보충 영상을 자동 진행하고, 멈춘 영상 및 다음 강의를 자동 재생합니다.
 // @match        https://tutor-t.thinkforbl.com/*
 // @run-at       document-idle
@@ -38,7 +38,17 @@
   function goNext() {
     if (navigationScheduled) return;
     navigationScheduled = true;
-    setTimeout(() => { const next = findNextControl(); if (!next) { navigationScheduled = false; log('다음 강의 컨트롤을 찾지 못했습니다.'); return; } log('다음 강의 이동:', labelOf(next)); next.click(); }, CONFIG.delayMs);
+    setTimeout(() => {
+      const next = findNextControl();
+      if (!next) {
+        navigationScheduled = false;
+        log('다음 강의 컨트롤을 찾지 못했습니다.');
+        return;
+      }
+      log('다음 강의 이동:', labelOf(next));
+      next.click();
+      navigationScheduled = false;
+    }, CONFIG.delayMs);
   }
   function clickLearningInteraction() {
     const control = CONFIG.interactionSelectors
